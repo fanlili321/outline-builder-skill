@@ -11,6 +11,15 @@
 
 字号下限（规范第三节）由 font() 记录、save() 汇总告警：
     标题≥64 / 正文要点·结论≥48 / 图表标签≥28 / 来源注·AI标注等边角小字（kind='fine'）豁免。
+
+组件速查：
+    stat_card         数据大字报（单个关键数字）
+    tight_box         紧贴文字的框（≈文字125%大小），多格布局按行数动态定位，别用固定偏移套所有格子
+    flow_arrow        竖直流程箭头（纵向步骤之间）
+    right_arrow       水平流程箭头（横向时间轴/阶段之间）
+    direction_triangle 方向三角（涨跌/升降结论，配合 ORANGE/BLUE 区分方向）
+    bubble            带尖角气泡标注（指向图表上的具体元素，而非漂浮的说明文字）
+    band              底部结论条（整页收尾一句话）
 """
 from PIL import Image, ImageDraw, ImageFont
 
@@ -20,6 +29,7 @@ ORANGE = '#F17640'   # 主色（品牌橙）
 CARD = '#FDF0E7'     # 卡片浅橙底
 TXT = '#333333'
 GRAY = '#8A8A8A'
+BLUE = '#7CA7E0'      # 辅助蓝，用于跟橙色区分"另一个方向"（如下跌/减少，对比橙色的上涨/增加）
 FONT_TPL = '/Users/fanlili/Library/Fonts/SourceHanSansCN-{}.otf'  # 思源黑体
 
 MIN_SIZE = {'title': 64, 'body': 48, 'label': 28, 'fine': 0}
@@ -86,8 +96,69 @@ def rich(d, x, y, segs, size=48, ls=1.0):
 
 
 def flow_arrow(d, cx, y, w=44, h=22, fill=ORANGE):
-    """流程箭头（承担先后顺序信息，非装饰）。"""
+    """竖直流程箭头（承担先后顺序信息，非装饰）：多用于纵向流程图相邻步骤之间。"""
     d.polygon((cx - w // 2, y, cx + w // 2, y, cx, y + h), fill=fill)
+
+
+def right_arrow(d, cx, cy, w=40, h=54, fill=ORANGE):
+    """水平流程箭头：多用于横向时间轴/阶段流程图相邻步骤之间。"""
+    d.polygon((cx - h * 0.35, cy - w / 2, cx - h * 0.35, cy + w / 2, cx + h * 0.65, cy), fill=fill)
+
+
+def direction_triangle(d, cx, cy, size, up, fill):
+    """方向三角（涨/跌、升/降等结论用，直接承载信息，非装饰）：up=True 尖朝上。"""
+    if up:
+        pts = (cx - size, cy + size * 0.6, cx + size, cy + size * 0.6, cx, cy - size * 0.7)
+    else:
+        pts = (cx - size, cy - size * 0.6, cx + size, cy - size * 0.6, cx, cy + size * 0.7)
+    d.polygon(pts, fill=fill)
+
+
+def tight_box(d, cx, cy, lines, size=48, weight='Bold', fill=CARD, text_fill=TXT, pad_ratio=0.25):
+    """紧贴内容的文字框：框宽高≈文字尺寸的 (1+pad_ratio)，默认约125%，避免大留白显得松散。
+    多行/多格布局时按此动态计算，不要对不同行数的格子套用同一套固定坐标偏移——
+    行数不一致会导致标签和数值挤在一起（459期"80万积蓄"两行文字压标签的教训）。
+    返回 (x0, y0, x1, y1) 供后续箭头/连线定位。"""
+    f = font(size, weight, 'body')
+    lh = int(size * 1.3)
+    max_w = max(f.getlength(ln) for ln in lines)
+    box_w = max_w * (1 + pad_ratio)
+    box_h = lh * len(lines) * (1 + pad_ratio * 0.5)
+    x0, y0 = cx - box_w / 2, cy - box_h / 2
+    x1, y1 = cx + box_w / 2, cy + box_h / 2
+    rrect(d, (x0, y0, x1, y1), 16, fill)
+    start_y = cy - lh * (len(lines) - 1) / 2
+    for i, ln in enumerate(lines):
+        d.text((cx, start_y + i * lh), ln, font=f, fill=text_fill, anchor='mm')
+    return x0, y0, x1, y1
+
+
+def bubble(d, target_x, target_y, lines, size=32, fill=ORANGE, text_color='white',
+           side='below', pad_ratio=0.25):
+    """带尖角的气泡标注，尖角指向 (target_x, target_y)（如图表上的某个数据点/区块）。
+    比起纯说明文字更适合"指向具体元素的补充说明"场景；side='below'|'above' 决定气泡在目标的哪一侧。
+    框大小同样按文字的 ~125% 收紧，不留大片空白。返回气泡底部（below）或顶部（above）的 y，方便后续元素排布。"""
+    f = font(size, 'Bold', 'label')
+    lh = int(size * 1.3)
+    max_w = max(f.getlength(ln) for ln in lines)
+    bw = max_w * (1 + pad_ratio)
+    bh = lh * len(lines) * (1 + pad_ratio * 0.5)
+    bx0 = min(max(target_x - bw / 2, 20), W - 20 - bw)
+    bx1 = bx0 + bw
+    nub = 16
+    if side == 'below':
+        by0 = target_y + nub + 8
+        by1 = by0 + bh
+        d.polygon((target_x - nub, by0, target_x + nub, by0, target_x, by0 - nub - 8), fill=fill)
+    else:
+        by1 = target_y - nub - 8
+        by0 = by1 - bh
+        d.polygon((target_x - nub, by1, target_x + nub, by1, target_x, by1 + nub + 8), fill=fill)
+    rrect(d, (bx0, by0, bx1, by1), 14, fill)
+    start_y = (by0 + by1) / 2 - lh * (len(lines) - 1) / 2
+    for i, ln in enumerate(lines):
+        d.text(((bx0 + bx1) / 2, start_y + i * lh), ln, font=f, fill=text_color, anchor='mm')
+    return by1 if side == 'below' else by0
 
 
 def source_note(d, text, x=110):
