@@ -37,7 +37,7 @@ scripts/
 
 - 先读 `Desktop/范丽丽./live-ppt-tool/直播大纲制作指南.md`（九类选题套路、内容积木库、口径红线），本 skill 不重复这部分内容。
 - `lark-cli docs` 系列命令已升级到 v2，`SKILL.md` 里 A3/B4 段落的旧命令示例仅作说明，实际操作前用 `lark-cli skills read lark-doc` 读当前权威文档。
-- 投顾组合净值等内部数据要用「螺丝钉数据工具箱」（妙搭 app）查询，走真实登录的浏览器访问，不是 `lark-cli apps` 命令（那个身份没有这个应用的协作者权限）。
+- 投顾组合净值等内部数据要从 https://dbms.yhlsd.com/ 查询，走真实登录的浏览器访问，不是 `lark-cli apps` 命令（那个身份没有协作者权限）；不再用旧的「螺丝钉数据工具箱」（妙搭 app）入口。
 
 ## 维护说明
 

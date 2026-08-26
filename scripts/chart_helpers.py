@@ -25,7 +25,8 @@ DGREEN = '#1E9E7B'   # ≥5星段
 TXT = '#333333'
 SRC_GRAY = '#999999'
 LINE_COLORS = [ORANGE, LBLUE, GRAY, '#4874CB', RED, '#D53A78', YELLOW]  # 多线按序取
-SRC = '数据来源：Wind、螺丝钉团队'
+SRC = '数据来源：Wind'                    # 默认来源，绝大多数走势图/数据图用这个
+SRC_STAR = '数据来源：Wind、银行螺丝钉'      # 仅星级/估值表相关内容才加"银行螺丝钉"，不是"螺丝钉团队"
 STD_CAPTION = '图片来自AI，仅供示意，ppt中会重新作图，并核对数据'
 
 
@@ -103,9 +104,11 @@ def add_right_axis(ax, dts, vals, label='红利星级', color=GOLD, ylim=(0.5, 5
     return ax2
 
 
-def add_source(fig, end_date, note=None):
-    """右下来源（必加），note=左下口径说明（可选）"""
-    fig.text(0.985, 0.015, f'{SRC}，截至{end_date}', ha='right', fontsize=12, color=SRC_GRAY)
+def add_source(fig, end_date, note=None, star=False):
+    """右下来源（必加），note=左下口径说明（可选）。
+    star=True 仅用于星级/估值表相关内容（来源加"银行螺丝钉"）；其余一律默认来源只写Wind。"""
+    src = SRC_STAR if star else SRC
+    fig.text(0.985, 0.015, f'{src}，截至{end_date}', ha='right', fontsize=12, color=SRC_GRAY)
     if note:
         fig.text(0.13, 0.015, note, ha='left', fontsize=12, color=TXT)
 
