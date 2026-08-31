@@ -25,6 +25,8 @@ DGREEN = '#1E9E7B'   # ≥5星段
 TXT = '#333333'
 SRC_GRAY = '#999999'
 LINE_COLORS = [ORANGE, LBLUE, GRAY, '#4874CB', RED, '#D53A78', YELLOW]  # 多线按序取
+TICK_SIZE = 20      # 横纵坐标刻度字号（PPT投屏可读下限，471期用户要求从15上调）
+TICK_SIZE_2ND = 18  # 副轴刻度，比主轴略小一档以区分主次
 SRC = '数据来源：Wind'                            # 默认来源（指数/行情类图表），绝大多数走势图/数据图用这个
 SRC_STAR = '数据来源：Wind、银行螺丝钉'              # 指数/行情类图表若带星级/估值表，才加"银行螺丝钉"
 SRC_PORTFOLIO_BASE = '东方证券、雪球基金'            # 投顾组合净值类图表的固定基础来源，不用Wind打底
@@ -64,7 +66,7 @@ def pct_axis(ax, all_vals):
     ticks = ax.get_yticks()
     ax.set_ylim(min(lo * 1.08, ticks[0]), max(hi * 1.08, ticks[-1]))
     ax.yaxis.set_major_formatter(lambda v, p: f'{v*100:.0f}%')
-    ax.tick_params(colors=TXT, labelsize=15)
+    ax.tick_params(colors=TXT, labelsize=TICK_SIZE)
 
 
 def fmt_xaxis(ax, dts, every_n_years=None):
@@ -74,7 +76,7 @@ def fmt_xaxis(ax, dts, every_n_years=None):
     else:
         ax.xaxis.set_major_locator(mdates.AutoDateLocator(minticks=4, maxticks=7))
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y.%-m'))
-    ax.tick_params(colors=TXT, labelsize=15)
+    ax.tick_params(colors=TXT, labelsize=TICK_SIZE)
 
 
 def base_chart(title, days, data, figsize=(13.5, 7), colors=None):
@@ -98,8 +100,8 @@ def add_right_axis(ax, dts, vals, label='红利星级', color=GOLD, ylim=(0.5, 5
     ax2.plot(dts, vals, color=color, linewidth=2.2, linestyle=(0, (5, 2)), zorder=2)
     ax2.set_ylim(*ylim)
     ax2.set_yticks(list(ticks))
-    ax2.set_ylabel(label, fontsize=14, color=color)
-    ax2.tick_params(colors=color, labelsize=14)
+    ax2.set_ylabel(label, fontsize=TICK_SIZE_2ND, color=color)
+    ax2.tick_params(colors=color, labelsize=TICK_SIZE_2ND)
     ax2.spines['top'].set_visible(False)
     ax2.spines['right'].set_color('#CCCCCC')
     return ax2
