@@ -25,9 +25,13 @@ DGREEN = '#1E9E7B'   # ≥5星段
 TXT = '#333333'
 SRC_GRAY = '#999999'
 LINE_COLORS = [ORANGE, LBLUE, GRAY, '#4874CB', RED, '#D53A78', YELLOW]  # 多线按序取
-TITLE_SIZE = 32     # 图表主标题字号（471期用户要求从26上调，投屏后要压得住整张图）
-TICK_SIZE = 20      # 横纵坐标刻度字号（PPT投屏可读下限，471期用户要求从15上调）
-TICK_SIZE_2ND = 18  # 副轴刻度，比主轴略小一档以区分主次
+# ── 字号档位（471期定稿，投直播大屏用；改字号只改这里，别在各处写死） ──
+TITLE_SIZE = 32     # 图表主标题（原26）
+TICK_SIZE = 20      # 横纵坐标刻度、轴标签（原15）
+LEGEND_SIZE = 20    # 图例，与刻度同档（原15）
+TICK_SIZE_2ND = 18  # 副轴刻度/轴标签，比主轴小一档以区分主次（原14）
+TABLE_SIZE = 18     # 图下方数据表（原14.5）
+SRC_SIZE = 16       # 底部来源注/口径注，最小一档但要能看清（原12）
 SRC = '数据来源：Wind'                            # 默认来源（指数/行情类图表），绝大多数走势图/数据图用这个
 SRC_STAR = '数据来源：Wind、银行螺丝钉'              # 指数/行情类图表若带星级/估值表，才加"银行螺丝钉"
 SRC_PORTFOLIO_BASE = '东方证券、雪球基金'            # 投顾组合净值类图表的固定基础来源，不用Wind打底
@@ -91,7 +95,7 @@ def base_chart(title, days, data, figsize=(13.5, 7), colors=None):
     fmt_xaxis(ax, dts)
     ax.set_title(title, fontsize=TITLE_SIZE, fontweight='bold', color='black', pad=44)
     ax.legend(loc='lower left', bbox_to_anchor=(0.0, 1.0), ncol=min(len(data), 4),
-              frameon=False, fontsize=15, handlelength=1.6, columnspacing=1.2)
+              frameon=False, fontsize=LEGEND_SIZE, handlelength=1.6, columnspacing=1.2)
     return fig, ax, dts
 
 
@@ -124,9 +128,9 @@ def add_source(fig, end_date, note=None, star=False, portfolio=False, wind=False
         src = '数据来源：' + '、'.join(parts)
     else:
         src = SRC_STAR if star else SRC
-    fig.text(0.985, 0.015, f'{src}，截至{end_date}', ha='right', fontsize=12, color=SRC_GRAY)
+    fig.text(0.985, 0.015, f'{src}，截至{end_date}', ha='right', fontsize=SRC_SIZE, color=SRC_GRAY)
     if note:
-        fig.text(0.13, 0.015, note, ha='left', fontsize=12, color=TXT)
+        fig.text(0.13, 0.015, note, ha='left', fontsize=SRC_SIZE, color=TXT)
 
 
 def monthly_returns(cache, code, s, e):
@@ -152,7 +156,7 @@ def add_table(fig, headers, rows, rect=(0.08, 0.10, 0.87, 0.22), first_col_w=0.2
     tab_ax.axis('off')
     tbl = tab_ax.table(cellText=rows, colLabels=headers, loc='center', cellLoc='center')
     tbl.auto_set_font_size(False)
-    tbl.set_fontsize(14.5)
+    tbl.set_fontsize(TABLE_SIZE)
     tbl.scale(1, 2.1)
     for j in range(len(headers)):
         cell = tbl[0, j]

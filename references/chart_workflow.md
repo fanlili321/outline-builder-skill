@@ -44,13 +44,17 @@
 用 [scripts/chart_helpers.py](../scripts/chart_helpers.py)（配色/字体/坐标轴/图例/来源标注已封装）。核心样式（与PPT一致，钉大看惯了这套，不一致会被打回）：
 - 思源黑体；主色橙#F17640、浅蓝#7CA7E0、灰#929292；星级线加深金黄#E5A200走副轴
 - 图例横排靠左置顶；Y轴百分比整数刻度＋浅灰横网格；X轴 `YYYY.M` 格式4-7个刻度
-- **字号统一走 `chart_helpers` 常量，不要写死数字**（471期用户连提两次"放大"后定的档位，原因是这套图最终投直播大屏，旧的 26/15 在屏上偏小）：
+- **字号统一走 `chart_helpers` 常量，不要写死数字**（471期用户连提三次"放大"后定的档位，原因是这套图最终投直播大屏，旧字号在屏上普遍偏小）：
   | 用途 | 常量 | 字号 | 旧值 |
   |---|---|---|---|
   | 图表主标题 | `TITLE_SIZE` | 32 | 26 |
-  | 横纵坐标刻度 | `TICK_SIZE` | 20 | 15 |
+  | 横纵坐标刻度、轴标签 | `TICK_SIZE` | 20 | 15 |
+  | 图例 | `LEGEND_SIZE` | 20 | 15 |
   | 副轴刻度/轴标签 | `TICK_SIZE_2ND` | 18 | 14 |
-  `base_chart()`/`pct_axis()`/`fmt_xaxis()`/`add_right_axis()` 已内置；**自己写 `set_title(fontsize=…)`、`tick_params(labelsize=…)`、`set_yticklabels(fontsize=…)` 时一律引用常量**，否则以后调一次要满文件找。
+  | 图下方数据表 | `TABLE_SIZE` | 18 | 14.5 |
+  | 底部来源注/口径注 | `SRC_SIZE` | 16 | 12 |
+  `base_chart()`/`pct_axis()`/`fmt_xaxis()`/`add_right_axis()`/`add_source()`/`add_table()` 已内置；**自己写 `set_title(fontsize=…)`、`tick_params(labelsize=…)`、`set_yticklabels(fontsize=…)`、`legend(fontsize=…)`、`fig.text(fontsize=…)` 时一律引用常量**，否则以后调一次要满文件找（471期就因为字号散落在5个脚本里，返工重跑了一遍）。
+- **放大字号后必须重新目检每张图**：字号变大容易把图例挤出画布、把标题撑到换行、或让 X 轴首尾刻度落到 `xlim` 之外被切掉（471期CCL图起点是2006年，放大后X轴第一个标签却变成2008，就是 `set_xlim(days[0], …)` 卡在首个刻度之后导致的；把 xlim 往外放一点即可）。
 - 多线**按共同交易日对齐**归一化为相对首日涨跌幅（绝不断线）
 - **右下角灰色来源标注**（必加，用 `add_source()`，两套口径按图表内容二选一，不能混用/自造）：
   - **指数/行情类图表（默认）**：只写「数据来源：Wind」；图里带螺丝钉星级/估值表才追加成「Wind、银行螺丝钉」（`add_source(..., star=True)`）。
