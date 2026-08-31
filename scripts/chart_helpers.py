@@ -25,6 +25,7 @@ DGREEN = '#1E9E7B'   # ≥5星段
 TXT = '#333333'
 SRC_GRAY = '#999999'
 LINE_COLORS = [ORANGE, LBLUE, GRAY, '#4874CB', RED, '#D53A78', YELLOW]  # 多线按序取
+TITLE_SIZE = 32     # 图表主标题字号（471期用户要求从26上调，投屏后要压得住整张图）
 TICK_SIZE = 20      # 横纵坐标刻度字号（PPT投屏可读下限，471期用户要求从15上调）
 TICK_SIZE_2ND = 18  # 副轴刻度，比主轴略小一档以区分主次
 SRC = '数据来源：Wind'                            # 默认来源（指数/行情类图表），绝大多数走势图/数据图用这个
@@ -88,7 +89,7 @@ def base_chart(title, days, data, figsize=(13.5, 7), colors=None):
     style_ax(ax)
     pct_axis(ax, [v for _, vals in data for v in vals])
     fmt_xaxis(ax, dts)
-    ax.set_title(title, fontsize=26, fontweight='bold', color='black', pad=44)
+    ax.set_title(title, fontsize=TITLE_SIZE, fontweight='bold', color='black', pad=44)
     ax.legend(loc='lower left', bbox_to_anchor=(0.0, 1.0), ncol=min(len(data), 4),
               frameon=False, fontsize=15, handlelength=1.6, columnspacing=1.2)
     return fig, ax, dts
