@@ -35,7 +35,7 @@ scripts/
 
 ## 使用前提
 
-- 先读 `Desktop/范丽丽./live-ppt-tool/直播大纲制作指南.md`（九类选题套路、内容积木库、口径红线），本 skill 不重复这部分内容。
+- 先读 `references/outline_making_guide.md`（九类选题套路、内容积木库、口径红线）。该文件随 skill 仓库维护，不依赖桌面绝对路径。
 - `lark-cli docs` 系列命令已升级到 v2，`SKILL.md` 里 A3/B4 段落的旧命令示例仅作说明，实际操作前用 `lark-cli skills read lark-doc` 读当前权威文档。
 - 投顾组合净值等内部数据要从 https://dbms.yhlsd.com/ 查询，走真实登录的浏览器访问（飞书/豆包扫码），不是 `lark-cli apps` 命令（那个身份没有协作者权限）；不再用旧的「螺丝钉数据工具箱」（妙搭 app）入口。登录后有直连 REST API（如 `/api/portfolio-nav?portfolioName=...&beginDate=...&endDate=...&page=1&pageSize=2000`），用浏览器 JS 里 `fetch(..., {credentials:'include'})` 复用已登录会话直接取数据，比等"历史导出"异步任务更快。
 - **用户口头说的选题简称 ≠ 工具箱里的"组合名称"字面值，两者是多对一/需要人工指定映射，不能靠猜**（470期教训：用户说"主动优选"，工具箱里同时有"螺丝钉金钉宝主动优选A"和"…C"两个份额，AI 选错成了 A；已确认的映射见下表，遇到列表里没有的简称必须先问用户，不能凭字面相似度自己选）：

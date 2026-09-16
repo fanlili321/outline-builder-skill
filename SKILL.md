@@ -37,7 +37,7 @@ description: 直播大纲唯一入口与全流程。用户未特殊说明时，�
 
 ## 前置必读
 
-1. **《直播大纲制作指南》**：`/Users/fanlili/Desktop/范丽丽./live-ppt-tool/直播大纲制作指南.md` —— 九类选题套路模板、内容积木库、单页写法、口径红线全在里面，本技能不重复，先读它。
+1. **《直播大纲制作指南》**：完整读取 [references/outline_making_guide.md](references/outline_making_guide.md) —— 九类选题套路、内容积木、单页写法和口径红线均以仓库内版本为准；禁止依赖桌面绝对路径。
 2. **近30期已定稿大纲风格基准**：生成初稿前完整读取 [references/recent_30_outline_patterns.md](references/recent_30_outline_patterns.md)，从中选择题材最接近的2—3期作为风格样本，模仿其逻辑顺序、页标题、单页密度、复用标注和口播语气；统计只用于识别习惯，不得机械套配额。
    - 保险、养老、教育金、家庭资产配置等小白科普选题，同时读取 [references/case_475_lessons.md](references/case_475_lessons.md)，落实“认知地图进入正式目录、品种介绍＋购买关注点双页闭环、已有海外资金的合规前提、平台承接与产品介绍分开”等规则。
 3. 每周直播大纲文件夹 token：`IscSfJSjXl1nvIdActdcwwAKnDg`（历史大纲、459模板结构都在这取）；本地 `Desktop/范丽丽./live-ppt-tool/outline_NNN/` 目录名也能提示当前期数。
