@@ -2,7 +2,7 @@
 """大纲设计图 PIL 渲染助手：封装规范（1920x1080、字号下限、配色、组件、缩略图验收）。
 
 用法：
-    import sys; sys.path.insert(0, '/Users/fanlili/.claude/skills/outline-builder/scripts')
+    import sys; sys.path.insert(0, '.agents/skills/outline-builder/scripts')  # 在「银行螺丝钉直播」项目根目录运行；在别处运行时换成本 scripts 目录的实际路径
     from design_helpers import *
     im, d = canvas()
     title(d, '页面主标题')            # ≥64px，自动记录字号
