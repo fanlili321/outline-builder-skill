@@ -59,3 +59,9 @@ index 从 parent 的 children 数组里查；**每删一次都要重新拉 block
 
 ## 插图后核验（必做）
 重新拉 blocks，对每张新图确认：(1) 在 parent children 里的位置紧跟锚点文字块；(2) `image.token` 非空（绑定成功）。
+
+## 常见坑（488期实录）
+- **带编号的H3**：block_insert_after/block_replace 写 H3 时要写 `<h3 seq="auto" seq-level="auto">标题</h3>`；只写 `<h3>` 插进去没有序号，页码会断。
+- **`while read` 循环里调 lark-cli 会吃掉循环的标准输入**，导致只跑第一条、其余静默失败（下载看似成功实际没文件）。每条命令加 `</dev/null`，或者拆成单独调用，跑完逐个检查文件是否存在。
+- **读批注接口的输出前面会混进 `[page 1] fetching...` 这类进度行**，直接 `json.loads`/jq 会报错：先从第一个 `{` 截取再解析；批注里的 `person`/`user_id` 等字段可能是 null，取值要判空。
+- **`+media-insert` 会打印进度行**，直接管道给 jq 会解析失败、看起来像插图失败：不要因此重插（会出重复图），先拉 blocks 检查图是否已插入，再用 `grep '^{'` 过滤出 JSON 读结果。
